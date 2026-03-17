@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate NightLife Icons</title></head>
+<body style="background:#222;color:#fff;font-family:sans-serif;padding:40px;">
+<h2>NightLife PWA Icon Generator</h2>
+<p>Right-click each image below and "Save Image As" to the <code>public/icons/</code> folder.</p>
+
+<h3>icon-192x192.png</h3>
+<canvas id="c192" width="192" height="192"></canvas>
+
+<h3>icon-512x512.png</h3>
+<canvas id="c512" width="512" height="512"></canvas>
+
+<script>
+function drawIcon(canvas) {
+  const ctx = canvas.getContext('2d');
+  const s = canvas.width;
+  const r = s * 0.15;
+
+  // Background
+  ctx.fillStyle = '#070709';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, s, s, r);
+  ctx.fill();
+
+  // Gold gradient circle glow
+  const grd = ctx.createRadialGradient(s/2, s*0.4, 0, s/2, s*0.4, s*0.4);
+  grd.addColorStop(0, 'rgba(201,168,76,0.15)');
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, s, s);
+
+  // Text "NL"
+  ctx.fillStyle = '#C9A84C';
+  ctx.font = `bold ${s*0.4}px Arial, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('NL', s/2, s*0.45);
+
+  // Subtext
+  ctx.fillStyle = 'rgba(201,168,76,0.5)';
+  ctx.font = `${s*0.06}px Arial, sans-serif`;
+  ctx.fillText('NIGHTLIFE', s/2, s*0.72);
+}
+
+drawIcon(document.getElementById('c192'));
+drawIcon(document.getElementById('c512'));
+</script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NightLife Gabon – Maquettes v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dim: rgba(201,168,76,0.15);
+    --black: #070709;
+    --dark1: #0D0D10;
+    --dark2: #131318;
+    --dark3: #1A1A22;
+    --dark4: #22222D;
+    --white: #F5F0E8;
+    --muted: #6B6B7A;
+    --accent: #FF4B6E;
+    --green: #2ECC71;
+    --blue: #4B9FFF;
+    --purple: #9B59B6;
+  }
+  * { margin:0;padding:0;box-sizing:border-box; }
+  body { background:var(--black);font-family:'DM Sans',sans-serif;color:var(--white);overflow-x:hidden; }
+
+  /* HEADER */
+  .page-header { text-align:center;padding:50px 20px 30px;position:relative; }
+  .page-header::before { content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:350px;background:radial-gradient(ellipse,rgba(201,168,76,0.07) 0%,transparent 70%);pointer-events:none; }
+  .brand { font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,80px);letter-spacing:0.15em;color:var(--gold);text-shadow:0 0 60px rgba(201,168,76,0.25); }
+  .brand-sub { font-size:11px;letter-spacing:0.5em;color:var(--muted);margin-top:6px;text-transform:uppercase; }
+  .divider { width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto; }
+
+  /* SECTION TITLES */
+  .section-header { text-align:center;padding:40px 20px 30px; }
+  .section-header h2 { font-family:'Bebas Neue',sans-serif;font-size:clamp(22px,3vw,30px);letter-spacing:0.3em;color:var(--white); }
+  .section-header p { font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.1em; }
+
+  /* PHONE GRID */
+  .phones-grid { display:flex;flex-wrap:wrap;gap:30px;justify-content:center;padding:0 30px 60px;max-width:1500px;margin:0 auto; }
+
+  /* PHONE */
+  .phone-wrap { display:flex;flex-direction:column;align-items:center;gap:14px; }
+  .phone-tag { font-size:9px;letter-spacing:0.35em;color:var(--muted);text-transform:uppercase; }
+  .phone-shell { background:var(--dark2);border-radius:40px;border:1.5px solid rgba(201,168,76,0.2);padding:14px;box-shadow:0 30px 70px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.03),inset 0 1px 0 rgba(255,255,255,0.05); }
+  .phone-shell.staff-shell { border-color:rgba(255,75,110,0.2); }
+  .phone-notch { width:100px;height:24px;background:var(--dark1);border-radius:0 0 16px 16px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;gap:7px; }
+  .notch-dot { width:8px;height:8px;background:var(--dark3);border-radius:50%;border:1px solid rgba(255,255,255,0.04); }
+  .notch-bar { width:50px;height:4px;background:var(--dark3);border-radius:3px; }
+  .phone-screen { background:var(--dark1);border-radius:28px;overflow:hidden;width:280px;height:580px;position:relative; }
+  .phone-screen.tall { height:640px; }
+
+  /* STATUS BAR */
+  .sbar { display:flex;justify-content:space-between;align-items:center;padding:8px 16px 5px;font-size:10px;font-weight:600; }
+  .sbar-icons { display:flex;gap:4px;align-items:center;font-size:9px; }
+
+  /* SCROLLABLE CONTENT */
+  .scr { overflow-y:auto;height:calc(100% - 54px);scrollbar-width:none;padding-bottom:10px; }
+  .scr::-webkit-scrollbar { display:none; }
+  .scr.has-nav { height:calc(100% - 110px); }
+
+  /* ===== SCREEN: LOGIN ===== */
+  .login-bg { width:100%;height:100%;background:linear-gradient(160deg,#0D0010 0%,#0D0D10 40%,#0A0A0F 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;position:relative; }
+  .login-bg::before { content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,0.12) 0%,transparent 70%); }
+  .login-logo { font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.2em;color:var(--gold);margin-bottom:4px; }
+  .login-logo-sub { font-size:8px;letter-spacing:0.4em;color:var(--muted);margin-bottom:30px; }
+  .login-title { font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--white);margin-bottom:4px; }
+  .login-sub { font-size:10px;color:var(--muted);margin-bottom:24px; }
+  .input-group { width:100%;margin-bottom:12px; }
+  .input-label { font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:5px; }
+  .input-field { width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--white);display:flex;align-items:center;gap:8px; }
+  .input-field-value { opacity:0.7; }
+  .input-cursor { width:1px;height:14px;background:var(--gold);animation:blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+  .btn-login { width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:12px;padding:13px;text-align:center;margin-top:6px;cursor:pointer; }
+  .btn-login-text { font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.25em;color:var(--black); }
+  .login-or { font-size:9px;color:var(--muted);margin:14px 0;letter-spacing:0.2em; }
+  .role-chips { display:flex;gap:6px;flex-wrap:wrap;justify-content:center; }
+  .role-chip { padding:5px 10px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);font-size:8px;letter-spacing:0.1em;color:var(--muted); }
+  .role-chip.active { border-color:rgba(201,168,76,0.4);color:var(--gold);background:rgba(201,168,76,0.08); }
+
+  /* ===== SCREEN: CLIENT HOME ===== */
+  .c-header { padding:14px 18px 16px;background:linear-gradient(180deg,rgba(201,168,76,0.05) 0%,transparent 100%); }
+  .c-greeting { font-size:10px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase; }
+  .c-name { font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--white);margin-top:2px; }
+  .loyalty-card { margin-top:12px;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between; }
+  .lc-left .lc-lbl { font-size:8px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase; }
+  .lc-left .lc-pts { font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);line-height:1; }
+  .lc-left .lc-pts span { font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted); }
+  .lc-bar { width:100px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:5px; }
+  .lc-bar-fill { width:68%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px; }
+  .lc-right .tier { background:var(--gold);color:var(--black);font-size:7px;font-weight:700;letter-spacing:0.2em;padding:3px 7px;border-radius:20px;text-transform:uppercase; }
+  .lc-right .tier-next { font-size:8px;color:var(--muted);margin-top:4px;text-align:right; }
+
+  .sec-lbl { font-size:9px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;padding:12px 18px 8px; }
+  .events-row { display:flex;gap:10px;padding:0 18px 12px;overflow-x:auto;scrollbar-width:none; }
+  .events-row::-webkit-scrollbar { display:none; }
+  .ev-card { min-width:130px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.05);flex-shrink:0; }
+  .ev-img { height:72px;display:flex;align-items:center;justify-content:center;font-size:26px;position:relative; }
+  .ev1 { background:linear-gradient(135deg,#1a0a2e,#3d1a5e); }
+  .ev2 { background:linear-gradient(135deg,#0a1a2e,#1a3d5e); }
+  .ev3 { background:linear-gradient(135deg,#1a2e0a,#3a5e1a); }
+  .ev-date { position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.65);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:3px 6px;font-size:7px;color:var(--gold);font-weight:600; }
+  .ev-info { background:var(--dark2);padding:8px 10px; }
+  .ev-name { font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .ev-place { font-size:8px;color:var(--muted);margin-top:2px; }
+  .ev-price { font-size:9px;color:var(--gold);font-weight:600;margin-top:4px; }
+
+  .order-btn { margin:0 18px 12px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer; }
+  .ob-text { font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.2em;color:var(--black); }
+  .ob-sub { font-size:9px;color:rgba(0,0,0,0.55);margin-top:1px; }
+  .ob-icon { width:32px;height:32px;background:rgba(0,0,0,0.15);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px; }
+
+  .menu-q { display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px 12px; }
+  .mq-item { background:var(--dark2);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px;display:flex;align-items:center;gap:8px; }
+  .mq-icon { width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
+  .mi1{background:rgba(201,168,76,0.1);} .mi2{background:rgba(75,159,255,0.1);} .mi3{background:rgba(255,75,110,0.1);} .mi4{background:rgba(46,204,113,0.1);}
+  .mq-name { font-size:10px;font-weight:600;color:var(--white); }
+  .mq-price { font-size:9px;color:var(--muted);margin-top:1px; }
+
+  /* ===== SCREEN: MENU COMPLET ===== */
+  .menu-header { padding:14px 18px;display:flex;align-items:center;justify-content:space-between; }
+  .menu-title { font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:var(--white); }
+  .search-bar { margin:0 18px 12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:9px 14px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted); }
+  .cat-tabs { display:flex;gap:8px;padding:0 18px 14px;overflow-x:auto;scrollbar-width:none; }
+  .cat-tabs::-webkit-scrollbar { display:none; }
+  .cat-tab { padding:6px 14px;border-radius:20px;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;white-space:nowrap;border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer; }
+  .cat-tab.active { background:var(--gold);color:var(--black);border-color:transparent;font-weight:700; }
+  .menu-section-title { font-size:9px;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;padding:4px 18px 8px; }
+  .menu-row { display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(255,255,255,0.03); }
+  .menu-row-img { width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0; }
+  .mr-bg1{background:rgba(201,168,76,0.08);} .mr-bg2{background:rgba(75,159,255,0.08);} .mr-bg3{background:rgba(255,75,110,0.08);} .mr-bg4{background:rgba(46,204,113,0.08);}
+  .mr-info { flex:1;min-width:0; }
+  .mr-name { font-size:12px;font-weight:600;color:var(--white); }
+  .mr-desc { font-size:9px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .mr-right { text-align:right;flex-shrink:0; }
+  .mr-price { font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--gold); }
+  .mr-add { width:26px;height:26px;background:var(--gold-dim);border:1px solid rgba(201,168,76,0.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--gold);margin-top:3px;margin-left:auto; }
+  .cart-fab { position:absolute;bottom:70px;right:16px;background:var(--gold);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 20px rgba(201,168,76,0.4); }
+  .cart-badge { position:absolute;top:-4px;right:-4px;background:var(--accent);color:white;font-size:8px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center; }
+
+  /* ===== SCREEN: STAFF DASHBOARD ===== */
+  .staff-hdr { padding:12px 18px;background:linear-gradient(180deg,rgba(255,75,110,0.05) 0%,transparent 100%);display:flex;align-items:center;justify-content:space-between; }
+  .staff-role-badge { background:linear-gradient(135deg,rgba(255,75,110,0.2),rgba(255,75,110,0.08));border:1px solid rgba(255,75,110,0.3);border-radius:20px;padding:3px 8px;font-size:7px;letter-spacing:0.2em;color:var(--accent);text-transform:uppercase; }
+  .staff-nm { font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--white);margin-top:4px; }
+  .staff-shift { font-size:8px;color:var(--muted); }
+  .s-avatar { width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#FF8C42);display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid rgba(255,75,110,0.3); }
+  .kpi-row { display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.04); }
+  .kpi { background:var(--dark1);padding:10px 8px;text-align:center; }
+  .kpi-v { font-family:'Bebas Neue',sans-serif;font-size:20px;line-height:1; }
+  .kv-gold{color:var(--gold);} .kv-green{color:var(--green);} .kv-red{color:var(--accent);}
+  .kpi-l { font-size:7px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:2px; }
+  .caisse-box { margin:10px 18px 0;background:linear-gradient(135deg,rgba(46,204,113,0.1),rgba(46,204,113,0.03));border:1px solid rgba(46,204,113,0.2);border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between; }
+  .cb-lbl { font-size:8px;letter-spacing:0.2em;color:var(--green);text-transform:uppercase;opacity:0.8; }
+  .cb-total { font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--green);line-height:1;margin-top:2px; }
+  .cb-sub { font-size:8px;color:var(--muted); }
+  .orders-bar { display:flex;align-items:center;justify-content:space-between;padding:12px 18px 8px; }
+  .ob-title { font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.15em;color:var(--white); }
+  .live-dot { width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 1.5s infinite;display:inline-block;margin-right:4px; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)} }
+  .live-lbl { font-size:8px;color:var(--green); }
+  .ord-row { display:flex;align-items:center;gap:8px;padding:8px 18px;border-bottom:1px solid rgba(255,255,255,0.03); }
+  .ord-tbl { width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:11px;flex-shrink:0; }
+  .ot-alert{background:rgba(255,75,110,0.15);color:var(--accent);border:1px solid rgba(255,75,110,0.3);}
+  .ot-ok{background:rgba(46,204,113,0.15);color:var(--green);border:1px solid rgba(46,204,113,0.3);}
+  .ot-wait{background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);}
+  .ord-info { flex:1;min-width:0; }
+  .ord-items { font-size:10px;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .ord-waiter { font-size:8px;color:var(--muted);margin-top:1px; }
+  .ord-r { text-align:right;flex-shrink:0; }
+  .ord-amt { font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--gold);line-height:1; }
+  .ord-time { font-size:7px;color:var(--muted);margin-top:2px; }
+  .ord-time.alert { color:var(--accent); }
+  .ord-time.warn { color:var(--gold); }
+
+  /* ===== SCREEN: CAISSE ===== */
+  .caisse-screen { padding:14px 18px; }
+  .caisse-screen-title { font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--white);margin-bottom:14px; }
+  .caisse-total-big { background:linear-gradient(135deg,rgba(46,204,113,0.1),rgba(46,204,113,0.03));border:1px solid rgba(46,204,113,0.2);border-radius:16px;padding:18px;text-align:center;margin-bottom:14px; }
+  .ctb-lbl { font-size:8px;letter-spacing:0.3em;color:var(--green);text-transform:uppercase;opacity:0.7; }
+  .ctb-val { font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--green);line-height:1;margin-top:4px; }
+  .ctb-sub { font-size:9px;color:var(--muted);margin-top:4px; }
+  .pay-modes { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px; }
+  .pay-mode { background:var(--dark2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:12px;text-align:center; }
+  .pm-icon { font-size:20px;margin-bottom:6px; }
+  .pm-name { font-size:9px;font-weight:600;color:var(--white); }
+  .pm-amt { font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);line-height:1;margin-top:2px; }
+  .pm-pct { font-size:8px;color:var(--muted); }
+  .txn-title { font-size:9px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:8px; }
+  .txn-row { display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03); }
+  .txn-left .txn-name { font-size:10px;font-weight:500;color:var(--white); }
+  .txn-left .txn-time { font-size:8px;color:var(--muted);margin-top:1px; }
+  .txn-amt { font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--gold); }
+  .close-btn { width:100%;background:var(--dark3);border:1px solid rgba(255,75,110,0.2);border-radius:12px;padding:12px;text-align:center;margin-top:14px; }
+  .close-btn-text { font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.2em;color:var(--accent); }
+
+  /* ===== SCREEN: RAPPORTS ===== */
+  .report-screen { padding:14px 18px; }
+  .report-title { font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--white);margin-bottom:4px; }
+  .report-period { font-size:9px;color:var(--muted);margin-bottom:14px; }
+  .period-tabs { display:flex;gap:6px;margin-bottom:14px; }
+  .pt { padding:5px 12px;border-radius:16px;font-size:8px;letter-spacing:0.1em;border:1px solid rgba(255,255,255,0.07);color:var(--muted); }
+  .pt.active { background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.3);color:var(--gold); }
+  .stat-cards { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px; }
+  .stat-card { background:var(--dark2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:12px; }
+  .sc-lbl { font-size:8px;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase; }
+  .sc-val { font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--white);line-height:1;margin-top:4px; }
+  .sc-change { font-size:8px;margin-top:2px; }
+  .ch-up { color:var(--green); }
+  .ch-down { color:var(--accent); }
+  .chart-placeholder { background:var(--dark2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px;margin-bottom:14px; }
+  .cp-title { font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:10px; }
+  .bar-chart { display:flex;align-items:flex-end;gap:6px;height:60px; }
+  .bar-col { flex:1;display:flex;flex-direction:column;align-items:center;gap:4px; }
+  .bar { width:100%;background:rgba(201,168,76,0.2);border-radius:3px 3px 0 0;border-top:2px solid var(--gold); }
+  .bar.today { background:rgba(201,168,76,0.4);border-top-color:var(--gold-light); }
+  .bar-lbl { font-size:7px;color:var(--muted); }
+  .top-products { background:var(--dark2);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:14px; }
+  .tp-title { font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:10px; }
+  .tp-row { display:flex;align-items:center;gap:8px;margin-bottom:8px; }
+  .tp-rank { font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--muted);width:16px;flex-shrink:0; }
+  .tp-name { flex:1;font-size:10px;color:var(--white); }
+  .tp-bar-wrap { width:70px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px; }
+  .tp-bar-fill { height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px; }
+  .tp-pct { font-size:8px;color:var(--muted);width:24px;text-align:right; }
+
+  /* ===== SCREEN: STAFF GESTION ===== */
+  .staff-mgmt { padding:14px 18px; }
+  .sm-title { font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--white);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between; }
+  .sm-add { width:28px;height:28px;background:rgba(255,75,110,0.12);border:1px solid rgba(255,75,110,0.25);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent); }
+  .staff-card { background:var(--dark2);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px; }
+  .sc-av { width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700; }
+  .av1{background:linear-gradient(135deg,#C9A84C,#E8C96A);color:var(--black);}
+  .av2{background:linear-gradient(135deg,#4B9FFF,#7BC8FF);color:var(--black);}
+  .av3{background:linear-gradient(135deg,#FF4B6E,#FF8C42);color:var(--black);}
+  .av4{background:linear-gradient(135deg,#2ECC71,#4BFFB0);color:var(--black);}
+  .av5{background:linear-gradient(135deg,#9B59B6,#C39BD3);color:var(--black);}
+  .sc-info { flex:1;min-width:0; }
+  .sc-name { font-size:11px;font-weight:600;color:var(--white); }
+  .sc-role { font-size:8px;color:var(--muted);margin-top:1px; }
+  .sc-status { display:flex;align-items:center;gap:4px;margin-top:4px; }
+  .sd { width:5px;height:5px;border-radius:50%;flex-shrink:0; }
+  .sd-green{background:var(--green);} .sd-gold{background:var(--gold);} .sd-muted{background:var(--muted);}
+  .ss-label { font-size:8px; }
+  .ss-on{color:var(--green);} .ss-break{color:var(--gold);} .ss-off{color:var(--muted);}
+  .sc-right { text-align:right;flex-shrink:0; }
+  .sc-hours { font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--white); }
+  .sc-earned { font-size:8px;color:var(--muted);margin-top:2px; }
+
+  /* BOTTOM NAV */
+  .bnav { position:absolute;bottom:0;left:0;right:0;background:rgba(13,13,16,0.97);border-top:1px solid rgba(255,255,255,0.05);padding:8px 0 14px;display:flex;justify-content:space-around;backdrop-filter:blur(20px); }
+  .bnav.staff-nav { border-top-color:rgba(255,75,110,0.1); }
+  .ni { display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;position:relative; }
+  .ni-icon { font-size:16px; }
+  .ni-lbl { font-size:7px;letter-spacing:0.08em;color:var(--muted); }
+  .ni.active .ni-lbl { color:var(--gold); }
+  .ni.active-r .ni-lbl { color:var(--accent); }
+  .ni-dot { width:3px;height:3px;background:var(--gold);border-radius:50%;position:absolute;bottom:-4px; }
+  .ni-dot-r { width:3px;height:3px;background:var(--accent);border-radius:50%;position:absolute;bottom:-4px; }
+
+  /* LAYOUT */
+  .row-label { font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.3em;color:var(--muted);text-align:center;padding:20px 20px 0; }
+  .full-divider { width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);margin:30px auto; }
+
+  /* LEGEND */
+  .legend-wrap { max-width:1100px;margin:0 auto;padding:0 30px 80px;display:grid;grid-template-columns:1fr 1fr;gap:20px; }
+  .leg-block { background:var(--dark2);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:24px; }
+  .leg-title { font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.3em;color:var(--gold);margin-bottom:14px; }
+  .leg-title.red { color:var(--accent); }
+  .leg-item { display:flex;gap:10px;margin-bottom:10px;align-items:flex-start; }
+  .leg-dot { width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:7px;flex-shrink:0; }
+  .leg-dot.red { background:var(--accent); }
+  .leg-text { font-size:11px;color:var(--muted);line-height:1.6; }
+  .leg-text strong { color:var(--white); }
+
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)} }
+  .phone-wrap { animation:fadeInUp 0.6s ease forwards;opacity:0; }
+  .phone-wrap:nth-child(1){animation-delay:0.05s} .phone-wrap:nth-child(2){animation-delay:0.1s} .phone-wrap:nth-child(3){animation-delay:0.15s} .phone-wrap:nth-child(4){animation-delay:0.2s} .phone-wrap:nth-child(5){animation-delay:0.25s} .phone-wrap:nth-child(6){animation-delay:0.3s} .phone-wrap:nth-child(7){animation-delay:0.35s} .phone-wrap:nth-child(8){animation-delay:0.4s}
+
+  @media(max-width:700px) { .phones-grid{gap:20px;padding:0 16px 40px;} .legend-wrap{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="brand">NightLife Gabon</div>
+  <div class="brand-sub">Platform · Maquettes v2.0 · Libreville</div>
+  <div class="divider"></div>
+  <p style="font-size:12px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.8;">8 écrans · Interface Client & Staff · Dark Premium</p>
+</div>
+
+<!-- ===== CLIENT SCREENS ===== -->
+<div class="section-header">
+  <h2>📱 Interface Client</h2>
+  <p>Ce que voit le client sur son téléphone</p>
+</div>
+
+<div class="phones-grid">
+
+  <!-- CLIENT: LOGIN -->
+  <div class="phone-wrap">
+    <div class="phone-tag">01 · Connexion Client</div>
+    <div class="phone-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="login-bg">
+          <div class="login-logo">NightLife</div>
+          <div class="login-logo-sub">Gabon · Libreville</div>
+          <div class="login-title">Connexion</div>
+          <div class="login-sub">Accède à ton compte</div>
+          <div class="input-group">
+            <div class="input-label">📱 Numéro de téléphone</div>
+            <div class="input-field">
+              <span style="color:var(--muted);font-size:11px;">🇬🇦 +241</span>
+              <span class="input-field-value" style="font-size:12px;">06 XX XX XX</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">🔒 Code PIN</div>
+            <div class="input-field" style="justify-content:center;gap:12px;">
+              <span style="font-size:20px;color:var(--gold);">●</span>
+              <span style="font-size:20px;color:var(--gold);">●</span>
+              <span style="font-size:20px;color:var(--gold);">●</span>
+              <span style="font-size:20px;color:rgba(255,255,255,0.15);">●</span>
+            </div>
+          </div>
+          <div class="btn-login"><div class="btn-login-text">Se Connecter</div></div>
+          <div class="login-or">— ou inscription rapide —</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;">Crée un compte en 30 secondes<br/>avec ton numéro Airtel ou Moov</div>
+          <div style="margin-top:14px;display:flex;gap:10px;">
+            <div style="background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.2);border-radius:10px;padding:8px 14px;font-size:9px;color:var(--green);">📲 Airtel Money</div>
+            <div style="background:rgba(75,159,255,0.1);border:1px solid rgba(75,159,255,0.2);border-radius:10px;padding:8px 14px;font-size:9px;color:var(--blue);">📲 Moov Money</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT: HOME -->
+  <div class="phone-wrap">
+    <div class="phone-tag">02 · Accueil Client</div>
+    <div class="phone-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar"><span style="font-weight:700;font-size:11px;">21:45</span><div class="sbar-icons"><span>●●●</span><span>🔋</span></div></div>
+        <div class="scr has-nav">
+          <div class="c-header">
+            <div class="c-greeting">Bonsoir,</div>
+            <div class="c-name">Jean-Pierre 👋</div>
+            <div class="loyalty-card">
+              <div class="lc-left">
+                <div class="lc-lbl">Carte Fidélité</div>
+                <div class="lc-pts">2 840 <span>pts</span></div>
+                <div class="lc-bar"><div class="lc-bar-fill"></div></div>
+                <div style="font-size:8px;color:var(--muted);margin-top:4px;">160 pts → Gold</div>
+              </div>
+              <div class="lc-right">
+                <div class="tier">Silver</div>
+                <div class="tier-next">→ Gold</div>
+              </div>
+            </div>
+          </div>
+          <div class="sec-lbl">🔥 Prochaines Soirées</div>
+          <div class="events-row">
+            <div class="ev-card"><div class="ev-img ev1">🎶<div class="ev-date">SAM 22 MARS</div></div><div class="ev-info"><div class="ev-name">AfroVibes Night</div><div class="ev-place">Luxury Lounge</div><div class="ev-price">5 000 XAF</div></div></div>
+            <div class="ev-card"><div class="ev-img ev2">🎧<div class="ev-date">VEN 28 MARS</div></div><div class="ev-info"><div class="ev-name">DJ Zoro Live</div><div class="ev-place">Le Tivoli</div><div class="ev-price">3 000 XAF</div></div></div>
+            <div class="ev-card"><div class="ev-img ev3">🥂<div class="ev-date">SAM 29 MARS</div></div><div class="ev-info"><div class="ev-name">Ladies Night</div><div class="ev-place">Sky Lounge</div><div class="ev-price">Gratuit</div></div></div>
+          </div>
+          <div class="order-btn"><div><div class="ob-text">Passer Commande</div><div class="ob-sub">Table 7 · Luxury Lounge</div></div><div class="ob-icon">🛒</div></div>
+          <div class="sec-lbl">🍹 Menu Populaire</div>
+          <div class="menu-q">
+            <div class="mq-item"><div class="mq-icon mi1">🥃</div><div><div class="mq-name">Whisky</div><div class="mq-price">4 500 XAF</div></div></div>
+            <div class="mq-item"><div class="mq-icon mi2">🍺</div><div><div class="mq-name">Régab</div><div class="mq-price">1 000 XAF</div></div></div>
+            <div class="mq-item"><div class="mq-icon mi3">🍗</div><div><div class="mq-name">Brochettes</div><div class="mq-price">2 500 XAF</div></div></div>
+            <div class="mq-item"><div class="mq-icon mi4">🥤</div><div><div class="mq-name">Cocktail</div><div class="mq-price">3 000 XAF</div></div></div>
+          </div>
+        </div>
+        <div class="bnav">
+          <div class="ni active"><div class="ni-icon">🏠</div><div class="ni-lbl">Accueil</div><div class="ni-dot"></div></div>
+          <div class="ni"><div class="ni-icon">🍽️</div><div class="ni-lbl">Menu</div></div>
+          <div class="ni"><div class="ni-icon">🎟️</div><div class="ni-lbl">Soirées</div></div>
+          <div class="ni"><div class="ni-icon">⭐</div><div class="ni-lbl">Fidélité</div></div>
+          <div class="ni"><div class="ni-icon">👤</div><div class="ni-lbl">Profil</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT: MENU COMPLET -->
+  <div class="phone-wrap">
+    <div class="phone-tag">03 · Menu Complet</div>
+    <div class="phone-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar"><span style="font-weight:700;font-size:11px;">21:52</span><div class="sbar-icons"><span>●●●</span><span>🔋</span></div></div>
+        <div class="scr has-nav">
+          <div class="menu-header"><div class="menu-title">Menu</div><div style="font-size:10px;color:var(--muted);">Table 7</div></div>
+          <div class="search-bar">🔍 Rechercher un article...</div>
+          <div class="cat-tabs">
+            <div class="cat-tab active">Tout</div>
+            <div class="cat-tab">Boissons</div>
+            <div class="cat-tab">Food</div>
+            <div class="cat-tab">Cocktails</div>
+            <div class="cat-tab">Bouteilles</div>
+          </div>
+          <div class="menu-section-title">🥃 Alcools & Bières</div>
+          <div class="menu-row"><div class="menu-row-img mr-bg1">🥃</div><div class="mr-info"><div class="mr-name">Whisky JB</div><div class="mr-desc">Verre · 4cl · Avec ou sans glace</div></div><div class="mr-right"><div class="mr-price">4 500</div><div class="mr-add">+</div></div></div>
+          <div class="menu-row"><div class="menu-row-img mr-bg2">🍺</div><div class="mr-info"><div class="mr-name">Régab Pression</div><div class="mr-desc">Bière locale · 50cl · Bien fraîche</div></div><div class="mr-right"><div class="mr-price">1 000</div><div class="mr-add">+</div></div></div>
+          <div class="menu-row"><div class="menu-row-img mr-bg1">🍾</div><div class="mr-info"><div class="mr-name">Moët & Chandon</div><div class="mr-desc">Champagne · Bouteille 75cl</div></div><div class="mr-right"><div class="mr-price">45 000</div><div class="mr-add">+</div></div></div>
+          <div class="menu-section-title">🍗 Food & Snacks</div>
+          <div class="menu-row"><div class="menu-row-img mr-bg3">🍗</div><div class="mr-info"><div class="mr-name">Brochettes mixtes</div><div class="mr-desc">Bœuf + poulet · Sauce piment</div></div><div class="mr-right"><div class="mr-price">2 500</div><div class="mr-add">+</div></div></div>
+          <div class="menu-row"><div class="menu-row-img mr-bg4">🐟</div><div class="mr-info"><div class="mr-name">Poisson braisé</div><div class="mr-desc">Tilapia entier · Attiéké ou frites</div></div><div class="mr-right"><div class="mr-price">5 000</div><div class="mr-add">+</div></div></div>
+          <div class="menu-section-title">🥤 Cocktails & Soft</div>
+          <div class="menu-row"><div class="menu-row-img mr-bg3">🍹</div><div class="mr-info"><div class="mr-name">Tropical Sunset</div><div class="mr-desc">Rhum, mangue, passion, citron</div></div><div class="mr-right"><div class="mr-price">3 500</div><div class="mr-add">+</div></div></div>
+        </div>
+        <div class="cart-fab">🛒<div class="cart-badge">3</div></div>
+        <div class="bnav">
+          <div class="ni"><div class="ni-icon">🏠</div><div class="ni-lbl">Accueil</div></div>
+          <div class="ni active"><div class="ni-icon">🍽️</div><div class="ni-lbl">Menu</div><div class="ni-dot"></div></div>
+          <div class="ni"><div class="ni-icon">🎟️</div><div class="ni-lbl">Soirées</div></div>
+          <div class="ni"><div class="ni-icon">⭐</div><div class="ni-lbl">Fidélité</div></div>
+          <div class="ni"><div class="ni-icon">👤</div><div class="ni-lbl">Profil</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT: CARTE FIDELITE -->
+  <div class="phone-wrap">
+    <div class="phone-tag">04 · Carte Fidélité</div>
+    <div class="phone-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar"><span style="font-weight:700;font-size:11px;">22:10</span><div class="sbar-icons"><span>🔋</span></div></div>
+        <div class="scr has-nav" style="padding:14px 18px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--white);margin-bottom:14px;">Ma Fidélité</div>
+          <!-- Card visuelle -->
+          <div style="background:linear-gradient(135deg,#1A1200,#2A2000,#C9A84C22);border:1px solid rgba(201,168,76,0.35);border-radius:18px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.15),transparent);"></div>
+            <div style="font-size:8px;letter-spacing:0.3em;color:rgba(201,168,76,0.6);text-transform:uppercase;">NightLife Gabon · Carte Membre</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);margin-top:6px;letter-spacing:0.05em;">2 840 pts</div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+              <div style="background:var(--gold);color:var(--black);font-size:8px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.2em;">SILVER</div>
+              <div style="font-size:9px;color:rgba(201,168,76,0.6);">→ 160 pts pour GOLD</div>
+            </div>
+            <div style="margin-top:12px;font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:0.15em;color:rgba(255,255,255,0.4);">JEAN-PIERRE O.</div>
+          </div>
+          <!-- Niveaux -->
+          <div style="font-size:9px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;">Niveaux & Avantages</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+            <div style="background:var(--dark2);border:1px solid rgba(201,168,76,0.08);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:16px;">🥉</div>
+              <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:var(--muted);">Bronze · 0 pts</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">Accès standard</div></div>
+            </div>
+            <div style="background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:16px;">🥈</div>
+              <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:var(--gold);">Silver · 2 000 pts ✓</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">-5% sur commandes · Accès VIP events</div></div>
+            </div>
+            <div style="background:var(--dark2);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:16px;">🥇</div>
+              <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:var(--white);">Gold · 3 000 pts</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">-10% · Table réservée · Bouteille offerte</div></div>
+            </div>
+            <div style="background:var(--dark2);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;">
+              <div style="font-size:16px;">💎</div>
+              <div style="flex:1;"><div style="font-size:10px;font-weight:600;color:var(--white);">VIP · 5 000 pts</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">-15% · Entrée gratuite · Accès salon privé</div></div>
+            </div>
+          </div>
+          <!-- Historique pts -->
+          <div style="font-size:9px;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;">Historique des Points</div>
+          <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:10px;color:var(--white);font-weight:500;">Luxury Lounge · Table 7</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">14 mars 2026 · 22h30</div></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--green);">+120 pts</div>
+          </div>
+          <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+            <div><div style="font-size:10px;color:var(--white);font-weight:500;">AfroVibes Night · Ticket</div><div style="font-size:8px;color:var(--muted);margin-top:1px;">08 mars 2026 · Réservation</div></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--green);">+50 pts</div>
+          </div>
+        </div>
+        <div class="bnav">
+          <div class="ni"><div class="ni-icon">🏠</div><div class="ni-lbl">Accueil</div></div>
+          <div class="ni"><div class="ni-icon">🍽️</div><div class="ni-lbl">Menu</div></div>
+          <div class="ni"><div class="ni-icon">🎟️</div><div class="ni-lbl">Soirées</div></div>
+          <div class="ni active"><div class="ni-icon">⭐</div><div class="ni-lbl">Fidélité</div><div class="ni-dot"></div></div>
+          <div class="ni"><div class="ni-icon">👤</div><div class="ni-lbl">Profil</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="full-divider"></div>
+
+<!-- ===== STAFF SCREENS ===== -->
+<div class="section-header">
+  <h2 style="color:var(--accent);">🔐 Interface Staff</h2>
+  <p>Accès par rôle · Manager / Barman / Serveur / Sécurité</p>
+</div>
+
+<div class="phones-grid">
+
+  <!-- STAFF: LOGIN -->
+  <div class="phone-wrap">
+    <div class="phone-tag">05 · Connexion Staff</div>
+    <div class="phone-shell staff-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="login-bg" style="background:linear-gradient(160deg,#100008 0%,#0D0D10 40%,#0A0A0F 100%);">
+          <div style="position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(255,75,110,0.1) 0%,transparent 70%);"></div>
+          <div class="login-logo" style="color:var(--accent);">NightLife</div>
+          <div class="login-logo-sub">Staff · Accès Sécurisé</div>
+          <div style="background:rgba(255,75,110,0.08);border:1px solid rgba(255,75,110,0.2);border-radius:12px;padding:8px 14px;margin-bottom:20px;font-size:9px;color:rgba(255,75,110,0.8);letter-spacing:0.1em;display:flex;align-items:center;gap:6px;">🔒 Connexion réservée au personnel autorisé</div>
+          <div class="input-group">
+            <div class="input-label">👤 Identifiant</div>
+            <div class="input-field"><span class="input-field-value">alain.obiang</span></div>
+          </div>
+          <div class="input-group">
+            <div class="input-label">🔑 Mot de passe</div>
+            <div class="input-field"><span class="input-field-value">••••••••</span></div>
+          </div>
+          <div class="btn-login" style="background:linear-gradient(135deg,var(--accent),#FF8C42);">
+            <div class="btn-login-text">Accès Staff</div>
+          </div>
+          <div class="login-or">— Sélection du rôle —</div>
+          <div class="role-chips">
+            <div class="role-chip active">👑 Manager</div>
+            <div class="role-chip">🍸 Barman</div>
+            <div class="role-chip">🍽️ Serveur</div>
+            <div class="role-chip">🛡️ Sécurité</div>
+            <div class="role-chip">📊 Comptable</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF: DASHBOARD -->
+  <div class="phone-wrap">
+    <div class="phone-tag">06 · Dashboard Manager</div>
+    <div class="phone-shell staff-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar" style="color:var(--accent);"><span style="font-weight:700;font-size:11px;color:var(--white);">21:45</span><div class="sbar-icons"><span>🔒 STAFF</span></div></div>
+        <div class="scr has-nav">
+          <div class="staff-hdr">
+            <div><div class="staff-role-badge">Manager</div><div class="staff-nm">Alain Obiang</div><div class="staff-shift">Service Soir · 18h → 02h</div></div>
+            <div class="s-avatar">AO</div>
+          </div>
+          <div class="kpi-row">
+            <div class="kpi"><div class="kpi-v kv-gold">87K</div><div class="kpi-l">CA Soir</div></div>
+            <div class="kpi"><div class="kpi-v kv-green">14</div><div class="kpi-l">Commandes</div></div>
+            <div class="kpi"><div class="kpi-v kv-red">2</div><div class="kpi-l">Alertes</div></div>
+          </div>
+          <div class="caisse-box" style="margin-top:10px;">
+            <div><div class="cb-lbl">💰 Caisse du Soir</div><div class="cb-total">87 500 XAF</div><div class="cb-sub">Dernière txn · il y a 4 min</div></div>
+            <div style="font-size:26px;opacity:0.5;">📊</div>
+          </div>
+          <div class="orders-bar"><div class="orders-title" style="font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.15em;">Commandes Live</div><div><span class="live-dot"></span><span class="live-lbl">En direct</span></div></div>
+          <div class="ord-row"><div class="ord-tbl ot-alert">T3</div><div class="ord-info"><div class="ord-items">2× Whisky, 1× Brochettes</div><div class="ord-waiter">👤 Moussa</div></div><div class="ord-r"><div class="ord-amt">13K</div><div class="ord-time alert">⏱ 18 min</div></div></div>
+          <div class="ord-row"><div class="ord-tbl ot-ok">T7</div><div class="ord-info"><div class="ord-items">4× Régab, 1× Cocktail</div><div class="ord-waiter">👤 Éva</div></div><div class="ord-r"><div class="ord-amt">7K</div><div class="ord-time">✓ 5 min</div></div></div>
+          <div class="ord-row"><div class="ord-tbl ot-wait">T1</div><div class="ord-info"><div class="ord-items">1× Bouteille Moët</div><div class="ord-waiter">👤 Kevin</div></div><div class="ord-r"><div class="ord-amt">45K</div><div class="ord-time warn">⏳ Attente</div></div></div>
+          <div class="ord-row"><div class="ord-tbl ot-ok">T5</div><div class="ord-info"><div class="ord-items">3× Régab, 2× Jus</div><div class="ord-waiter">👤 Éva</div></div><div class="ord-r"><div class="ord-amt">5K</div><div class="ord-time">✓ 2 min</div></div></div>
+        </div>
+        <div class="bnav staff-nav">
+          <div class="ni active-r"><div class="ni-icon">📊</div><div class="ni-lbl" style="color:var(--accent);">Dashboard</div><div class="ni-dot-r"></div></div>
+          <div class="ni"><div class="ni-icon">🧾</div><div class="ni-lbl">Commandes</div></div>
+          <div class="ni"><div class="ni-icon">💰</div><div class="ni-lbl">Caisse</div></div>
+          <div class="ni"><div class="ni-icon">👥</div><div class="ni-lbl">Staff</div></div>
+          <div class="ni"><div class="ni-icon">⚙️</div><div class="ni-lbl">Config</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF: CAISSE -->
+  <div class="phone-wrap">
+    <div class="phone-tag">07 · Gestion Caisse</div>
+    <div class="phone-shell staff-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar"><span style="font-weight:700;font-size:11px;">21:50</span><div class="sbar-icons" style="color:var(--accent);"><span>🔒 STAFF</span></div></div>
+        <div class="scr has-nav">
+          <div class="caisse-screen">
+            <div class="caisse-screen-title">Caisse · Soir</div>
+            <div class="caisse-total-big">
+              <div class="ctb-lbl">Total Encaissé</div>
+              <div class="ctb-val">87 500</div>
+              <div style="font-size:9px;color:var(--green);margin-top:2px;">XAF · 14 transactions</div>
+              <div class="ctb-sub">Service 18h00 → maintenant</div>
+            </div>
+            <div class="pay-modes">
+              <div class="pay-mode"><div class="pm-icon">💵</div><div class="pm-name">Cash</div><div class="pm-amt">52 500</div><div class="pm-pct">60%</div></div>
+              <div class="pay-mode"><div class="pm-icon">📲</div><div class="pm-name">Mobile Money</div><div class="pm-amt">25 000</div><div class="pm-pct">28%</div></div>
+              <div class="pay-mode"><div class="pm-icon">💳</div><div class="pm-name">Carte</div><div class="pm-amt">10 000</div><div class="pm-pct">12%</div></div>
+              <div class="pay-mode" style="border-color:rgba(255,75,110,0.15);"><div class="pm-icon">🎁</div><div class="pm-name">Fidélité</div><div class="pm-amt">0</div><div class="pm-pct">0%</div></div>
+            </div>
+            <div class="txn-title">Dernières Transactions</div>
+            <div class="txn-row"><div class="txn-left"><div class="txn-name">Table 7 · Éva</div><div class="txn-time">21:48 · Mobile Money</div></div><div class="txn-amt">7 000</div></div>
+            <div class="txn-row"><div class="txn-left"><div class="txn-name">Table 1 · Kevin</div><div class="txn-time">21:32 · Cash</div></div><div class="txn-amt">45 000</div></div>
+            <div class="txn-row"><div class="txn-left"><div class="txn-name">Table 4 · Moussa</div><div class="txn-time">21:15 · Cash</div></div><div class="txn-amt">8 500</div></div>
+            <div class="close-btn"><div class="close-btn-text">⚠️ Clôturer la Caisse</div></div>
+          </div>
+        </div>
+        <div class="bnav staff-nav">
+          <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Dashboard</div></div>
+          <div class="ni"><div class="ni-icon">🧾</div><div class="ni-lbl">Commandes</div></div>
+          <div class="ni active-r"><div class="ni-icon">💰</div><div class="ni-lbl" style="color:var(--accent);">Caisse</div><div class="ni-dot-r"></div></div>
+          <div class="ni"><div class="ni-icon">👥</div><div class="ni-lbl">Staff</div></div>
+          <div class="ni"><div class="ni-icon">⚙️</div><div class="ni-lbl">Config</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF: RAPPORTS + GESTION STAFF -->
+  <div class="phone-wrap">
+    <div class="phone-tag">08 · Rapports & Analytics</div>
+    <div class="phone-shell staff-shell">
+      <div class="phone-notch"><div class="notch-dot"></div><div class="notch-bar"></div></div>
+      <div class="phone-screen">
+        <div class="sbar"><span style="font-weight:700;font-size:11px;">22:05</span><div class="sbar-icons" style="color:var(--accent);"><span>🔒 STAFF</span></div></div>
+        <div class="scr has-nav">
+          <div class="report-screen">
+            <div class="report-title">Rapports</div>
+            <div class="report-period">Semaine du 10 → 16 mars 2026</div>
+            <div class="period-tabs">
+              <div class="pt">Aujourd'hui</div>
+              <div class="pt active">Semaine</div>
+              <div class="pt">Mois</div>
+            </div>
+            <div class="stat-cards">
+              <div class="stat-card"><div class="sc-lbl">CA Total</div><div class="sc-val" style="color:var(--gold);">642K</div><div class="sc-change ch-up">▲ +18% vs sem. passée</div></div>
+              <div class="stat-card"><div class="sc-lbl">Commandes</div><div class="sc-val">89</div><div class="sc-change ch-up">▲ +12%</div></div>
+              <div class="stat-card"><div class="sc-lbl">Panier Moyen</div><div class="sc-val">7 200</div><div class="sc-change ch-up">▲ +5%</div></div>
+              <div class="stat-card"><div class="sc-lbl">Clients Uniq.</div><div class="sc-val">156</div><div class="sc-change ch-down">▼ -3%</div></div>
+            </div>
+            <div class="chart-placeholder">
+              <div class="cp-title">📊 CA par Jour (XAF)</div>
+              <div class="bar-chart">
+                <div class="bar-col"><div class="bar" style="height:30px;"></div><div class="bar-lbl">Lun</div></div>
+                <div class="bar-col"><div class="bar" style="height:45px;"></div><div class="bar-lbl">Mar</div></div>
+                <div class="bar-col"><div class="bar" style="height:38px;"></div><div class="bar-lbl">Mer</div></div>
+                <div class="bar-col"><div class="bar" style="height:52px;"></div><div class="bar-lbl">Jeu</div></div>
+                <div class="bar" style="display:none;"></div>
+                <div class="bar-col"><div class="bar" style="height:48px;"></div><div class="bar-lbl">Ven</div></div>
+                <div class="bar-col"><div class="bar" style="height:58px;background:rgba(201,168,76,0.4);border-top-color:var(--gold-light);"></div><div class="bar-lbl" style="color:var(--gold);">Sam</div></div>
+                <div class="bar-col"><div class="bar today" style="height:35px;"></div><div class="bar-lbl" style="color:var(--gold);">Dim</div></div>
+              </div>
+            </div>
+            <div class="top-products">
+              <div class="tp-title">🏆 Top Produits</div>
+              <div class="tp-row"><div class="tp-rank">1</div><div class="tp-name">Régab Pression</div><div class="tp-bar-wrap"><div class="tp-bar-fill" style="width:90%;"></div></div><div class="tp-pct">32%</div></div>
+              <div class="tp-row"><div class="tp-rank">2</div><div class="tp-name">Whisky JB</div><div class="tp-bar-wrap"><div class="tp-bar-fill" style="width:65%;"></div></div><div class="tp-pct">23%</div></div>
+              <div class="tp-row"><div class="tp-rank">3</div><div class="tp-name">Brochettes</div><div class="tp-bar-wrap"><div class="tp-bar-fill" style="width:45%;"></div></div><div class="tp-pct">16%</div></div>
+              <div class="tp-row"><div class="tp-rank">4</div><div class="tp-name">Cocktails</div><div class="tp-bar-wrap"><div class="tp-bar-fill" style="width:30%;"></div></div><div class="tp-pct">11%</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="bnav staff-nav">
+          <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Dashboard</div></div>
+          <div class="ni"><div class="ni-icon">🧾</div><div class="ni-lbl">Commandes</div></div>
+          <div class="ni"><div class="ni-icon">💰</div><div class="ni-lbl">Caisse</div></div>
+          <div class="ni"><div class="ni-icon">👥</div><div class="ni-lbl">Staff</div></div>
+          <div class="ni active-r"><div class="ni-icon">⚙️</div><div class="ni-lbl" style="color:var(--accent);">Config</div><div class="ni-dot-r"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LEGEND -->
+<div class="legend-wrap">
+  <div class="leg-block">
+    <div class="leg-title">📱 Interface Client — 4 Écrans</div>
+    <div class="leg-item"><div class="leg-dot"></div><div class="leg-text"><strong>Connexion</strong> — Numéro Airtel/Moov, code PIN, inscription rapide</div></div>
+    <div class="leg-item"><div class="leg-dot"></div><div class="leg-text"><strong>Accueil</strong> — Carte fidélité, soirées, commande à table, menu rapide</div></div>
+    <div class="leg-item"><div class="leg-dot"></div><div class="leg-text"><strong>Menu complet</strong> — Catégories, recherche, panier, prix en XAF</div></div>
+    <div class="leg-item"><div class="leg-dot"></div><div class="leg-text"><strong>Fidélité</strong> — Carte visuelle, niveaux Bronze→VIP, historique des points</div></div>
+  </div>
+  <div class="leg-block" style="border-color:rgba(255,75,110,0.1);">
+    <div class="leg-title red">🔐 Interface Staff — 4 Écrans</div>
+    <div class="leg-item"><div class="leg-dot red"></div><div class="leg-text"><strong>Login Staff</strong> — Identifiant + mot de passe + sélection de rôle (5 rôles)</div></div>
+    <div class="leg-item"><div class="leg-dot red"></div><div class="leg-text"><strong>Dashboard</strong> — KPIs live, caisse du soir, commandes en temps réel par table</div></div>
+    <div class="leg-item"><div class="leg-dot red"></div><div class="leg-text"><strong>Caisse</strong> — Total, modes de paiement (Cash/Mobile Money/Carte), transactions, clôture</div></div>
+    <div class="leg-item"><div class="leg-dot red"></div><div class="leg-text"><strong>Rapports</strong> — CA par jour, stats semaine/mois, top produits, export</div></div>
+  </div>
+</div>
+
+</body>
+</html>
