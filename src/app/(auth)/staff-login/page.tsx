@@ -5,14 +5,19 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/shared/Logo";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { STAFF_ROLES } from "@/lib/utils/constants";
 import type { StaffRole } from "@/lib/types";
 
+const DEMO_STAFF = [
+  { name: "Alain Obiang", role: "Manager", initials: "AO", username: "alain", password: "1234" },
+  { name: "Éva Ndong", role: "Serveuse", initials: "EN", username: "eva", password: "1234" },
+  { name: "Kevin Ondo", role: "Barman", initials: "KO", username: "kevin", password: "1234" },
+];
+
 export default function StaffLoginPage() {
   const router = useRouter();
-  const { isDemo, enterDemo } = useAuth();
+  const { enterDemo } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<StaffRole>("manager");
@@ -22,38 +27,20 @@ export default function StaffLoginPage() {
   function enterDemoMode() {
     sessionStorage.setItem("nightlife_demo", "1");
     enterDemo();
+    setLoading(true);
     setTimeout(() => router.replace("/dashboard"), 300);
   }
 
-  async function handleLogin() {
-    if (isDemo) {
-      enterDemoMode();
-      return;
-    }
-    if (!username || !password) {
-      // No credentials = demo mode
-      enterDemoMode();
-      return;
-    }
+  function handleLogin() {
+    enterDemoMode();
+  }
+
+  function quickLogin(staff: typeof DEMO_STAFF[0]) {
+    sessionStorage.setItem("nightlife_demo", "1");
+    sessionStorage.setItem("nightlife_staff", staff.name);
+    enterDemo();
     setLoading(true);
-    setError("");
-    try {
-      const { error: err } = await supabase.auth.signInWithPassword({
-        email: `${username}@nightlife.ga`,
-        password,
-      });
-      if (err) {
-        // If auth fails, offer demo mode
-        enterDemoMode();
-        return;
-      }
-      router.replace("/dashboard");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Identifiants invalides";
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+    setTimeout(() => router.replace("/dashboard"), 500);
   }
 
   return (
@@ -66,9 +53,34 @@ export default function StaffLoginPage() {
         Staff · Accès Sécurisé
       </p>
 
-      {/* Security notice */}
-      <div className="w-full bg-accent/[0.08] border border-accent/20 rounded-xl px-3.5 py-2 mb-5 text-[9px] text-accent/80 tracking-wider flex items-center gap-2">
-        🔒 {isDemo ? "Mode démo · Remplissez les champs librement" : "Connexion réservée au personnel autorisé"}
+      {/* Quick Staff Accounts */}
+      <div className="w-full mb-5">
+        <p className="text-[8px] text-muted/50 tracking-[0.2em] uppercase text-center mb-2">CONNEXION RAPIDE</p>
+        <div className="space-y-1.5">
+          {DEMO_STAFF.map((staff) => (
+            <button
+              key={staff.username}
+              onClick={() => quickLogin(staff)}
+              className="w-full bg-dark-2 border border-white/[0.04] rounded-xl p-3 flex items-center gap-3 text-left active:scale-[0.98] transition-transform"
+            >
+              <div className="w-10 h-10 rounded-full bg-accent/15 border border-accent/25 flex items-center justify-center text-[10px] font-bold text-accent">
+                {staff.initials}
+              </div>
+              <div className="flex-1">
+                <p className="text-[11px] text-cream font-medium">{staff.name}</p>
+                <p className="text-[9px] text-muted">{staff.role}</p>
+              </div>
+              <span className="text-[9px] text-accent/50">→</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="flex items-center gap-4 mb-4 w-full">
+        <div className="flex-1 h-px bg-white/[0.06]" />
+        <span className="text-[7px] text-muted/40 tracking-[0.2em]">OU</span>
+        <div className="flex-1 h-px bg-white/[0.06]" />
       </div>
 
       <div className="w-full space-y-3">
@@ -91,7 +103,12 @@ export default function StaffLoginPage() {
 
       <div className="mt-4 w-full">
         <Button variant="accent" size="lg" onClick={handleLogin} disabled={loading}>
-          {loading ? "CONNEXION..." : "ACCÈS STAFF"}
+          {loading ? (
+            <span className="flex items-center gap-2 justify-center">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              CONNEXION...
+            </span>
+          ) : "ACCÈS STAFF"}
         </Button>
       </div>
 
@@ -99,30 +116,16 @@ export default function StaffLoginPage() {
         <p className="mt-3 text-[10px] text-accent">{error}</p>
       )}
 
-      <div className="mt-5 text-[9px] text-muted tracking-[0.2em]">— Sélection du rôle —</div>
-
-      <div className="flex gap-1.5 mt-3 flex-wrap justify-center">
-        {STAFF_ROLES.map((r) => (
-          <button
-            key={r.value}
-            onClick={() => setSelectedRole(r.value)}
-            className={`px-2.5 py-1 rounded-full border text-[8px] tracking-wider transition-all ${
-              selectedRole === r.value
-                ? "border-accent/40 text-accent bg-accent/[0.08]"
-                : "border-white/[0.08] text-muted"
-            }`}
-          >
-            {r.emoji} {r.label}
-          </button>
-        ))}
-      </div>
-
       <button
         className="mt-6 text-[10px] text-muted hover:text-cream transition-colors"
         onClick={() => router.push("/login")}
       >
         ← Retour connexion client
       </button>
+
+      <p className="mt-4 text-[7px] text-muted/20 tracking-[0.15em]">
+        NIGHTLIFE STAFF v1.0
+      </p>
     </div>
   );
 }

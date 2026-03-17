@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/shared/Logo";
 import Button from "@/components/ui/Button";
-import { signInWithPhone, verifyOTP } from "@/lib/supabase/hooks";
 import { useAuth } from "@/lib/hooks/useAuth";
+
+const DEMO_ACCOUNTS = [
+  { phone: "06 12 34 56", name: "Jean-Pierre O.", pin: "1234" },
+  { phone: "05 98 76 54", name: "Marie Obame", pin: "1234" },
+  { phone: "07 00 11 22", name: "Patrick Ndong", pin: "1234" },
+];
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isDemo, enterDemo } = useAuth();
+  const { enterDemo } = useAuth();
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -25,34 +30,13 @@ export default function LoginPage() {
     setTimeout(() => router.replace("/accueil"), 300);
   }
 
-  async function handleSendOTP() {
+  function handleSendOTP() {
     if (!phone || phone.length < 8) {
       setError("Entrez un numéro valide");
       return;
     }
-    if (isDemo) {
-      setStep("otp");
-      return;
-    }
-    setLoading(true);
     setError("");
-    try {
-      const fullPhone = `+241${phone.replace(/\s/g, "")}`;
-      const { error: err } = await signInWithPhone(fullPhone);
-      if (err) {
-        // If phone provider not configured, fall back to demo mode
-        if (err.message?.includes("phone") || err.message?.includes("provider")) {
-          enterDemoMode();
-          return;
-        }
-        throw err;
-      }
-      setStep("otp");
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Erreur d'envoi");
-    } finally {
-      setLoading(false);
-    }
+    setStep("otp");
   }
 
   function handleOtpChange(index: number, value: string) {
@@ -70,29 +54,26 @@ export default function LoginPage() {
     }
   }
 
-  async function handleVerifyOTP(code?: string) {
+  function handleVerifyOTP(code?: string) {
     const otpCode = code || otp.join("");
-    if (isDemo) {
-      setLoading(true);
-      await new Promise((r) => setTimeout(r, 800));
-      router.replace("/accueil");
-      return;
-    }
     if (otpCode.length < 4) {
-      setError("Entrez le code reçu par SMS");
+      setError("Entrez le code de vérification");
       return;
     }
+    // Accept any 6-digit code in demo
     setLoading(true);
-    setError("");
-    try {
-      const fullPhone = `+241${phone.replace(/\s/g, "")}`;
-      const { error: err } = await verifyOTP(fullPhone, otpCode);
-      if (err) throw err;
-      router.replace("/accueil");
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Code invalide");
-      setLoading(false);
-    }
+    sessionStorage.setItem("nightlife_demo", "1");
+    enterDemo();
+    setTimeout(() => router.replace("/accueil"), 800);
+  }
+
+  function quickLogin(account: typeof DEMO_ACCOUNTS[0]) {
+    setPhone(account.phone);
+    sessionStorage.setItem("nightlife_demo", "1");
+    sessionStorage.setItem("nightlife_user", account.name);
+    enterDemo();
+    setLoading(true);
+    setTimeout(() => router.replace("/accueil"), 500);
   }
 
   return (
@@ -123,9 +104,39 @@ export default function LoginPage() {
                 className="w-full"
               >
                 <h1 className="font-serif text-2xl font-semibold text-cream text-center">Bienvenue</h1>
-                <p className="text-[11px] text-muted text-center mt-1 mb-8">
+                <p className="text-[11px] text-muted text-center mt-1 mb-6">
                   Connectez-vous pour commander, gagner des points et vivre la nuit.
                 </p>
+
+                {/* Quick Demo Accounts */}
+                <div className="mb-5">
+                  <p className="text-[8px] text-muted/50 tracking-[0.2em] uppercase text-center mb-2">CONNEXION RAPIDE</p>
+                  <div className="space-y-1.5">
+                    {DEMO_ACCOUNTS.map((acc) => (
+                      <button
+                        key={acc.phone}
+                        onClick={() => quickLogin(acc)}
+                        className="w-full card p-3 flex items-center gap-3 text-left btn-press"
+                      >
+                        <div className="w-9 h-9 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-[10px] font-bold text-gold">
+                          {acc.name.split(" ").map((n) => n[0]).join("")}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[11px] text-cream font-medium">{acc.name}</p>
+                          <p className="text-[9px] text-muted">+241 {acc.phone}</p>
+                        </div>
+                        <span className="text-[9px] text-gold/50">→</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="flex-1 h-px bg-white/[0.06]" />
+                  <span className="text-[8px] text-muted/50 tracking-[0.3em]">OU ENTREZ VOTRE NUMÉRO</span>
+                  <div className="flex-1 h-px bg-white/[0.06]" />
+                </div>
 
                 {/* Phone Input */}
                 <div className="relative mb-4">
@@ -147,25 +158,10 @@ export default function LoginPage() {
                   {loading ? (
                     <span className="flex items-center gap-2">
                       <span className="w-4 h-4 border-2 border-night-black/30 border-t-night-black rounded-full animate-spin" />
-                      ENVOI EN COURS...
+                      CONNEXION...
                     </span>
                   ) : "RECEVOIR LE CODE"}
                 </Button>
-
-                {/* Divider */}
-                <div className="flex items-center gap-4 my-6">
-                  <div className="flex-1 h-px bg-white/[0.06]" />
-                  <span className="text-[8px] text-muted/50 tracking-[0.3em]">OU</span>
-                  <div className="flex-1 h-px bg-white/[0.06]" />
-                </div>
-
-                {/* Demo access */}
-                <button
-                  onClick={enterDemoMode}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold/15 to-gold/5 border border-gold/25 flex items-center justify-center gap-2 text-[11px] text-gold tracking-wider font-medium btn-press"
-                >
-                  ✨ ACCÈS DÉMO RAPIDE
-                </button>
               </motion.div>
             ) : (
               <motion.div
@@ -180,9 +176,10 @@ export default function LoginPage() {
                   <span className="text-2xl">🔐</span>
                 </div>
                 <h2 className="font-serif text-xl font-semibold text-cream">Vérification</h2>
-                <p className="text-[11px] text-muted mt-1 mb-6">
+                <p className="text-[11px] text-muted mt-1 mb-2">
                   Code envoyé au <span className="text-gold">+241 {phone}</span>
                 </p>
+                <p className="text-[9px] text-gold/40 mb-6">Démo : entrez n&apos;importe quel code à 6 chiffres</p>
 
                 {/* OTP Grid */}
                 <div className="flex gap-2 justify-center mb-6">
@@ -225,10 +222,6 @@ export default function LoginPage() {
                     onClick={() => { setStep("phone"); setOtp(["","","","","",""]); }}
                   >
                     ← Changer de numéro
-                  </button>
-                  <span className="text-muted/30">|</span>
-                  <button className="text-[10px] text-gold/60 hover:text-gold transition-colors">
-                    Renvoyer le code
                   </button>
                 </div>
               </motion.div>
