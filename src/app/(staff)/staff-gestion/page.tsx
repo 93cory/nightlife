@@ -16,6 +16,7 @@ const STAFF = [
 const MENU_ITEMS = [
   { icon: "📈", label: "Rapports", desc: "CA, produits, tendances", href: "/rapports" },
   { icon: "📦", label: "Inventaire", desc: "Stock et alertes", href: "/inventaire" },
+  { icon: "💬", label: "Chat clients", desc: "Messages et demandes spéciales", href: "/staff-chat" },
   { icon: "📱", label: "Scanner QR", desc: "Fidélité client", href: "/scanner" },
   { icon: "🎵", label: "Soirées", desc: "Gérer les événements" },
   { icon: "⚙️", label: "Paramètres", desc: "Établissement et compte" },

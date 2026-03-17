@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"generateBuildId\" node_modules/next/dist/server/config*.js)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
