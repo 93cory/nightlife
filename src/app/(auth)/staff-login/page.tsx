@@ -12,7 +12,7 @@ import type { StaffRole } from "@/lib/types";
 
 export default function StaffLoginPage() {
   const router = useRouter();
-  const { isDemo } = useAuth();
+  const { isDemo, enterDemo } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState<StaffRole>("manager");
@@ -21,7 +21,8 @@ export default function StaffLoginPage() {
 
   function enterDemoMode() {
     sessionStorage.setItem("nightlife_demo", "1");
-    router.replace("/dashboard");
+    enterDemo();
+    setTimeout(() => router.replace("/dashboard"), 300);
   }
 
   async function handleLogin() {

@@ -10,7 +10,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { isDemo } = useAuth();
+  const { isDemo, enterDemo } = useAuth();
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -20,8 +20,9 @@ export default function LoginPage() {
 
   function enterDemoMode() {
     sessionStorage.setItem("nightlife_demo", "1");
+    enterDemo();
     setLoading(true);
-    setTimeout(() => router.replace("/accueil"), 500);
+    setTimeout(() => router.replace("/accueil"), 300);
   }
 
   async function handleSendOTP() {

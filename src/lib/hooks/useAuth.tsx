@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 import { supabase } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import type { StaffRole } from "@/lib/types";
@@ -13,6 +13,7 @@ interface AuthState {
   displayName: string;
   loading: boolean;
   isDemo: boolean;
+  enterDemo: () => void;
 }
 
 const AuthContext = createContext<AuthState>({
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthState>({
   displayName: "",
   loading: true,
   isDemo: false,
+  enterDemo: () => {},
 });
 
 function isSupabaseConfigured(): boolean {
@@ -37,21 +39,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     displayName: "",
     loading: true,
     isDemo: false,
+    enterDemo: () => {},
   });
 
-  useEffect(() => {
-    // Check if user opted into demo mode (no phone provider configured)
-    const demoFlag = typeof window !== "undefined" && sessionStorage.getItem("nightlife_demo");
+  const enterDemo = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      loading: false,
+      isDemo: true,
+    }));
+  }, []);
 
-    if (!isSupabaseConfigured() || demoFlag) {
-      setState({
-        user: null,
-        firebaseUser: null,
-        role: null,
-        displayName: "",
+  useEffect(() => {
+    if (!isSupabaseConfigured()) {
+      setState((prev) => ({
+        ...prev,
         loading: false,
         isDemo: true,
-      });
+        enterDemo,
+      }));
+      return;
+    }
+
+    // Check for existing demo flag
+    if (typeof window !== "undefined" && sessionStorage.getItem("nightlife_demo")) {
+      setState((prev) => ({
+        ...prev,
+        loading: false,
+        isDemo: true,
+        enterDemo,
+      }));
       return;
     }
 
@@ -60,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         loadProfile(session.user);
       } else {
-        setState((prev) => ({ ...prev, loading: false, isDemo: false }));
+        setState((prev) => ({ ...prev, loading: false, isDemo: false, enterDemo }));
       }
     });
 
@@ -70,19 +87,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           loadProfile(session.user);
         } else {
-          setState({
+          setState((prev) => ({
+            ...prev,
             user: null,
             firebaseUser: null,
             role: null,
             displayName: "",
             loading: false,
             isDemo: false,
-          });
+            enterDemo,
+          }));
         }
       }
     );
 
     return () => subscription.unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function loadProfile(user: User) {
@@ -96,33 +116,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const profile = data as { role?: string; display_name?: string } | null;
 
       if (profile) {
-        setState({
+        setState((prev) => ({
+          ...prev,
           user,
           firebaseUser: user,
           role: (profile.role || "client") as "client" | StaffRole,
           displayName: profile.display_name || user.phone || "",
           loading: false,
           isDemo: false,
-        });
+          enterDemo,
+        }));
       } else {
-        setState({
+        setState((prev) => ({
+          ...prev,
           user,
           firebaseUser: user,
           role: "client",
           displayName: user.phone || "",
           loading: false,
           isDemo: false,
-        });
+          enterDemo,
+        }));
       }
     } catch {
-      setState({
+      setState((prev) => ({
+        ...prev,
         user,
         firebaseUser: user,
         role: "client",
         displayName: user.phone || "",
         loading: false,
         isDemo: false,
-      });
+        enterDemo,
+      }));
     }
   }
 
