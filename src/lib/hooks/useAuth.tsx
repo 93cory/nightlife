@@ -40,7 +40,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) {
+    // Check if user opted into demo mode (no phone provider configured)
+    const demoFlag = typeof window !== "undefined" && sessionStorage.getItem("nightlife_demo");
+
+    if (!isSupabaseConfigured() || demoFlag) {
       setState({
         user: null,
         firebaseUser: null,

@@ -18,6 +18,12 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  function enterDemoMode() {
+    sessionStorage.setItem("nightlife_demo", "1");
+    setLoading(true);
+    setTimeout(() => router.replace("/accueil"), 500);
+  }
+
   async function handleSendOTP() {
     if (!phone || phone.length < 8) {
       setError("Entrez un numéro valide");
@@ -32,7 +38,14 @@ export default function LoginPage() {
     try {
       const fullPhone = `+241${phone.replace(/\s/g, "")}`;
       const { error: err } = await signInWithPhone(fullPhone);
-      if (err) throw err;
+      if (err) {
+        // If phone provider not configured, fall back to demo mode
+        if (err.message?.includes("phone") || err.message?.includes("provider")) {
+          enterDemoMode();
+          return;
+        }
+        throw err;
+      }
       setStep("otp");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur d'envoi");
@@ -147,8 +160,8 @@ export default function LoginPage() {
 
                 {/* Demo access */}
                 <button
-                  onClick={() => router.replace("/accueil")}
-                  className="w-full card py-3 flex items-center justify-center gap-2 text-[10px] text-gold tracking-wider btn-press"
+                  onClick={enterDemoMode}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold/15 to-gold/5 border border-gold/25 flex items-center justify-center gap-2 text-[11px] text-gold tracking-wider font-medium btn-press"
                 >
                   ✨ ACCÈS DÉMO RAPIDE
                 </button>

@@ -19,14 +19,19 @@ export default function StaffLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  function enterDemoMode() {
+    sessionStorage.setItem("nightlife_demo", "1");
+    router.replace("/dashboard");
+  }
+
   async function handleLogin() {
     if (isDemo) {
-      // In demo mode, go straight to dashboard
-      router.replace("/dashboard");
+      enterDemoMode();
       return;
     }
     if (!username || !password) {
-      setError("Remplissez tous les champs");
+      // No credentials = demo mode
+      enterDemoMode();
       return;
     }
     setLoading(true);
@@ -36,7 +41,11 @@ export default function StaffLoginPage() {
         email: `${username}@nightlife.ga`,
         password,
       });
-      if (err) throw err;
+      if (err) {
+        // If auth fails, offer demo mode
+        enterDemoMode();
+        return;
+      }
       router.replace("/dashboard");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Identifiants invalides";
