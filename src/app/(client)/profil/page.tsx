@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useOrdersStore } from "@/lib/store/ordersStore";
 import { useToast } from "@/components/ui/Toast";
-import { signOut } from "@/lib/firebase/auth";
+import { signOutSupabase } from "@/lib/supabase/hooks";
 import Badge from "@/components/ui/Badge";
 import QRCodeModal from "@/components/client/QRCodeModal";
 
@@ -47,7 +47,7 @@ export default function ProfilPage() {
   const [showQR, setShowQR] = useState(false);
 
   async function handleSignOut() {
-    if (!isDemo) await signOut();
+    if (!isDemo) await signOutSupabase();
     router.replace("/login");
   }
 
@@ -98,7 +98,7 @@ export default function ProfilPage() {
               <button onClick={() => setEditName(true)} className="text-muted text-xs btn-press">✏️</button>
             </div>
           )}
-          <p className="text-[10px] text-muted mt-0.5">{firebaseUser?.phoneNumber || "+241 06 XX XX XX"}</p>
+          <p className="text-[10px] text-muted mt-0.5">{firebaseUser?.phone || "+241 06 XX XX XX"}</p>
           <div className="flex items-center gap-2 mt-1.5">
             <Badge variant="gold">CLIENT</Badge>
             <Badge variant="muted">SILVER</Badge>

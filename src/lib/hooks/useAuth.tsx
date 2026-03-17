@@ -1,13 +1,14 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase/config";
+import { supabase } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 import type { StaffRole } from "@/lib/types";
 
 interface AuthState {
-  firebaseUser: FirebaseUser | null;
+  user: User | null;
+  /** @deprecated Use `user` instead */
+  firebaseUser: User | null;
   role: "client" | StaffRole | null;
   displayName: string;
   loading: boolean;
@@ -15,6 +16,7 @@ interface AuthState {
 }
 
 const AuthContext = createContext<AuthState>({
+  user: null,
   firebaseUser: null,
   role: null,
   displayName: "",
@@ -22,13 +24,14 @@ const AuthContext = createContext<AuthState>({
   isDemo: false,
 });
 
-function isFirebaseConfigured(): boolean {
-  const key = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-  return !!key && key !== "your_api_key_here" && key.length > 10;
+function isSupabaseConfigured(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return !!url && !url.includes("your_") && url.includes("supabase.co");
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
+    user: null,
     firebaseUser: null,
     role: null,
     displayName: "",
@@ -37,9 +40,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    // If Firebase is not configured, run in demo mode
-    if (!isFirebaseConfigured()) {
+    if (!isSupabaseConfigured()) {
       setState({
+        user: null,
         firebaseUser: null,
         role: null,
         displayName: "",
@@ -49,55 +52,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (!firebaseUser) {
-        setState({ firebaseUser: null, role: null, displayName: "", loading: false, isDemo: false });
-        return;
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        loadProfile(session.user);
+      } else {
+        setState((prev) => ({ ...prev, loading: false, isDemo: false }));
       }
+    });
 
-      try {
-        // Check if staff
-        const staffSnap = await getDoc(doc(db, "staff", firebaseUser.uid));
-        if (staffSnap.exists()) {
-          const data = staffSnap.data();
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        if (session?.user) {
+          loadProfile(session.user);
+        } else {
           setState({
-            firebaseUser,
-            role: data.role as StaffRole,
-            displayName: data.displayName || "",
+            user: null,
+            firebaseUser: null,
+            role: null,
+            displayName: "",
             loading: false,
             isDemo: false,
           });
-          return;
         }
-
-        // Check if client
-        const userSnap = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          setState({
-            firebaseUser,
-            role: "client",
-            displayName: data.displayName || firebaseUser.phoneNumber || "",
-            loading: false,
-            isDemo: false,
-          });
-          return;
-        }
-      } catch {
-        // Firestore error, continue with basic auth
       }
+    );
 
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function loadProfile(user: User) {
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      const profile = data as { role?: string; display_name?: string } | null;
+
+      if (profile) {
+        setState({
+          user,
+          firebaseUser: user,
+          role: (profile.role || "client") as "client" | StaffRole,
+          displayName: profile.display_name || user.phone || "",
+          loading: false,
+          isDemo: false,
+        });
+      } else {
+        setState({
+          user,
+          firebaseUser: user,
+          role: "client",
+          displayName: user.phone || "",
+          loading: false,
+          isDemo: false,
+        });
+      }
+    } catch {
       setState({
-        firebaseUser,
+        user,
+        firebaseUser: user,
         role: "client",
-        displayName: firebaseUser.phoneNumber || "",
+        displayName: user.phone || "",
         loading: false,
         isDemo: false,
       });
-    });
-
-    return () => unsubscribe();
-  }, []);
+    }
+  }
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>;
 }

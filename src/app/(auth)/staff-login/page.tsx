@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Logo from "@/components/shared/Logo";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { signInStaff } from "@/lib/firebase/auth";
+import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { STAFF_ROLES } from "@/lib/utils/constants";
 import type { StaffRole } from "@/lib/types";
@@ -32,7 +32,11 @@ export default function StaffLoginPage() {
     setLoading(true);
     setError("");
     try {
-      await signInStaff(username, password);
+      const { error: err } = await supabase.auth.signInWithPassword({
+        email: `${username}@nightlife.ga`,
+        password,
+      });
+      if (err) throw err;
       router.replace("/dashboard");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Identifiants invalides";

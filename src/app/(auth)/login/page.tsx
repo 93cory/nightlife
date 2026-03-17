@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "@/components/shared/Logo";
 import Button from "@/components/ui/Button";
-import { sendPhoneOTP, verifyOTP } from "@/lib/firebase/auth";
+import { signInWithPhone, verifyOTP } from "@/lib/supabase/hooks";
 import { useAuth } from "@/lib/hooks/useAuth";
 
 export default function LoginPage() {
@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const recaptchaRef = useRef<HTMLDivElement>(null);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   async function handleSendOTP() {
@@ -31,7 +30,9 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      await sendPhoneOTP(phone, recaptchaRef.current!);
+      const fullPhone = `+241${phone.replace(/\s/g, "")}`;
+      const { error: err } = await signInWithPhone(fullPhone);
+      if (err) throw err;
       setStep("otp");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erreur d'envoi");
@@ -70,7 +71,9 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      await verifyOTP(otpCode);
+      const fullPhone = `+241${phone.replace(/\s/g, "")}`;
+      const { error: err } = await verifyOTP(fullPhone, otpCode);
+      if (err) throw err;
       router.replace("/accueil");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Code invalide");
@@ -142,15 +145,13 @@ export default function LoginPage() {
                   <div className="flex-1 h-px bg-white/[0.06]" />
                 </div>
 
-                {/* Social login */}
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="card py-3 flex items-center justify-center gap-2 text-[10px] text-muted tracking-wider btn-press">
-                    📲 Airtel Money
-                  </button>
-                  <button className="card py-3 flex items-center justify-center gap-2 text-[10px] text-muted tracking-wider btn-press">
-                    📲 Moov Money
-                  </button>
-                </div>
+                {/* Demo access */}
+                <button
+                  onClick={() => router.replace("/accueil")}
+                  className="w-full card py-3 flex items-center justify-center gap-2 text-[10px] text-gold tracking-wider btn-press"
+                >
+                  ✨ ACCÈS DÉMO RAPIDE
+                </button>
               </motion.div>
             ) : (
               <motion.div
@@ -246,11 +247,9 @@ export default function LoginPage() {
       {/* Footer */}
       <div className="relative z-10 pb-8 text-center">
         <p className="text-[7px] text-muted/30 tracking-[0.2em]">
-          NIGHTLIFE GABON © 2024 · LIBREVILLE
+          NIGHTLIFE GABON © 2026 · LIBREVILLE
         </p>
       </div>
-
-      <div ref={recaptchaRef} id="recaptcha-container" />
     </div>
   );
 }
