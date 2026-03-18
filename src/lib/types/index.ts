@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 // ===== USER =====
 export type LoyaltyTier = "bronze" | "silver" | "gold" | "vip";
 
@@ -8,7 +6,7 @@ export interface User {
   phone: string;
   displayName: string;
   role: "client";
-  createdAt: Timestamp;
+  createdAt: string;
   loyaltyPoints: number;
   loyaltyTier: LoyaltyTier;
   totalSpent: number;
@@ -19,7 +17,7 @@ export interface LoyaltyEntry {
   description: string;
   points: number;
   type: "earn" | "redeem";
-  timestamp: Timestamp;
+  timestamp: string;
   orderId?: string;
 }
 
@@ -73,9 +71,9 @@ export interface Order {
   totalAmount: number;
   status: OrderStatus;
   paymentMode?: PaymentMode;
-  createdAt: Timestamp;
-  servedAt?: Timestamp;
-  paidAt?: Timestamp;
+  createdAt: string;
+  servedAt?: string;
+  paidAt?: string;
 }
 
 // ===== CAISSE =====
@@ -90,8 +88,8 @@ export interface CaisseSession {
   id: string;
   venueId: string;
   openedBy: string;
-  openedAt: Timestamp;
-  closedAt?: Timestamp;
+  openedAt: string;
+  closedAt?: string;
   shiftLabel: string;
   totalCollected: number;
   breakdown: PaymentBreakdown;
@@ -107,7 +105,7 @@ export interface Transaction {
   paymentMode: PaymentMode;
   tableNumber: number;
   staffName: string;
-  timestamp: Timestamp;
+  timestamp: string;
 }
 
 // ===== EVENTS =====
@@ -115,7 +113,7 @@ export interface NightEvent {
   id: string;
   name: string;
   venue: string;
-  date: Timestamp;
+  date: string;
   price: number;
   emoji: string;
   gradient: string[];
