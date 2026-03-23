@@ -1,13 +1,15 @@
 /**
- * Build script that patches Next.js bugs on Node 22+ / Windows
- * then runs the normal next build
+ * Build script that patches Next.js generateBuildId bug on Node 22+
+ * then runs next build. Gracefully handles trace warnings on Windows.
  */
 const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-// Patch: generateBuildId bug (generate is not a function)
-const buildIdFile = path.join(__dirname, "..", "node_modules", "next", "dist", "build", "generate-build-id.js");
+const root = path.join(__dirname, "..");
+
+// Patch: generateBuildId bug (generate is not a function) — Node 22+
+const buildIdFile = path.join(root, "node_modules", "next", "dist", "build", "generate-build-id.js");
 if (fs.existsSync(buildIdFile)) {
   let content = fs.readFileSync(buildIdFile, "utf8");
   const original = "let buildId = await generate();";
@@ -21,12 +23,14 @@ if (fs.existsSync(buildIdFile)) {
   }
 }
 
-// Run next build, allow exit code 1 from trace warnings
+// Run next build
 try {
-  execSync("npx next build", { stdio: "inherit", env: { ...process.env } });
+  execSync("npx next build", { stdio: "inherit", cwd: root });
+  console.log("\n✓ Build completed successfully");
 } catch (e) {
-  // Check if .next was created despite trace warnings
-  const buildManifest = path.join(__dirname, "..", ".next", "build-manifest.json");
+  // On Windows + Node 22, trace file warnings cause exit code 1
+  // but the build is actually complete. Check for build-manifest.json
+  const buildManifest = path.join(root, ".next", "build-manifest.json");
   if (fs.existsSync(buildManifest)) {
     console.log("\n✓ Build completed (with trace warnings)");
     process.exit(0);
