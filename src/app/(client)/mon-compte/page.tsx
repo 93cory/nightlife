@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, ShoppingBag, CalendarDays, Ticket, MapPin, Star, Clock, ArrowRight } from "lucide-react";
+import { Bell, ArrowRight } from "lucide-react";
+import { useAuthStore } from "@/lib/store/authStore";
 
 const quickActions = [
   { emoji: "🍹", label: "Commander", href: "/explorer", color: "from-gold/20 to-amber-900/20" },
@@ -23,12 +24,20 @@ const recentOrders = [
 ];
 
 export default function ClientHomePage() {
+  const user = useAuthStore((s) => s.user);
+  const firstName = user?.full_name?.split(" ")[0] || "Client";
+  const points = user?.loyalty_points ?? 2450;
+  const tier = user?.loyalty_tier ?? "gold";
+  const tierLabel = tier === "vip" ? "VIP" : tier === "gold" ? "GOLD" : tier === "silver" ? "SILVER" : "BRONZE";
+  const nextTierPoints = tier === "gold" ? 3000 : tier === "silver" ? 1500 : tier === "bronze" ? 500 : 5000;
+  const progress = Math.min(100, Math.round((points / nextTierPoints) * 100));
+
   return (
     <div className="p-4 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold">Bonjour, Jean-Baptiste 👋</h1>
+          <h1 className="text-xl font-bold">Bonjour, {firstName} 👋</h1>
           <p className="text-sm text-text-muted">Bienvenue sur NightLife</p>
         </div>
         <button className="relative p-2 rounded-xl bg-surface-light">
@@ -43,14 +52,14 @@ export default function ClientHomePage() {
         <div className="relative">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-gold tracking-wider">NIGHTLIFE MEMBER</span>
-            <span className="text-xs bg-gold/20 text-gold px-2 py-0.5 rounded-full font-bold">GOLD</span>
+            <span className="text-xs bg-gold/20 text-gold px-2 py-0.5 rounded-full font-bold">{tierLabel}</span>
           </div>
-          <p className="text-3xl font-black text-gold">2 450</p>
+          <p className="text-3xl font-black text-gold">{points.toLocaleString("fr-FR")}</p>
           <p className="text-xs text-text-muted">points de fidélité</p>
           <div className="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden">
-            <div className="h-full bg-gold rounded-full" style={{ width: "72%" }} />
+            <div className="h-full bg-gold rounded-full" style={{ width: `${progress}%` }} />
           </div>
-          <p className="text-[10px] text-text-dim mt-1">550 points avant le niveau VIP</p>
+          <p className="text-[10px] text-text-dim mt-1">{(nextTierPoints - points).toLocaleString("fr-FR")} points avant le niveau suivant</p>
         </div>
       </div>
 
