@@ -2,6 +2,8 @@
 
 import { Bell, Search, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/authStore";
 
 interface DashboardHeaderProps {
   userName?: string;
@@ -12,7 +14,17 @@ export default function DashboardHeader({
   userName = "Alain Obiang",
   userRole = "Manager",
 }: DashboardHeaderProps) {
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
   const [showProfile, setShowProfile] = useState(false);
+
+  const displayName = user?.full_name || userName;
+  const displayRole = user?.role === "superadmin" ? "Super Admin" : user?.role === "staff" ? "Manager" : userRole;
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
 
   return (
     <header className="h-16 border-b border-border bg-surface/80 backdrop-blur-lg sticky top-0 z-30 flex items-center justify-between px-4 lg:px-6">
@@ -49,8 +61,8 @@ export default function DashboardHeader({
               <User size={16} className="text-gold" />
             </div>
             <div className="hidden sm:block text-left">
-              <p className="text-sm font-medium text-foreground">{userName}</p>
-              <p className="text-xs text-text-dim">{userRole}</p>
+              <p className="text-sm font-medium text-foreground">{displayName}</p>
+              <p className="text-xs text-text-dim">{displayRole}</p>
             </div>
             <ChevronDown size={14} className="text-text-dim hidden sm:block" />
           </button>
@@ -68,12 +80,12 @@ export default function DashboardHeader({
                 >
                   Paramètres
                 </a>
-                <a
-                  href="/login"
-                  className="block px-4 py-2.5 text-sm text-danger hover:bg-danger/5"
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2.5 text-sm text-danger hover:bg-danger/5"
                 >
                   Déconnexion
-                </a>
+                </button>
               </div>
             </>
           )}

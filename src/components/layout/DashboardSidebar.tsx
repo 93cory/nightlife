@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/store/authStore";
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -64,8 +65,15 @@ export default function DashboardSidebar({
   establishmentType = "bar",
 }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const logout = useAuthStore((s) => s.logout);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
 
   const filteredItems = navItems.filter(
     (item) => !item.types || item.types.includes(establishmentType)
@@ -141,7 +149,7 @@ export default function DashboardSidebar({
 
       {/* Footer */}
       <div className="p-2 border-t border-border">
-        <button className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-danger hover:bg-danger/5 transition-all">
+        <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-danger hover:bg-danger/5 transition-all">
           <LogOut size={20} />
           {!collapsed && <span>Déconnexion</span>}
         </button>
