@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="76" fill="#070709"/>
-  <circle cx="256" cy="210" r="160" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="1"/>
-  <text x="256" y="255" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="192" fill="#C9A84C">NL</text>
-  <text x="256" y="370" text-anchor="middle" font-family="Arial,sans-serif" font-size="32" fill="rgba(201,168,76,0.5)" letter-spacing="10">NIGHTLIFE</text>
-</svg>

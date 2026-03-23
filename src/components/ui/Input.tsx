@@ -1,25 +1,41 @@
 "use client";
 
-import { InputHTMLAttributes } from "react";
+import { forwardRef } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  icon?: string;
+  error?: string;
+  icon?: React.ReactNode;
 }
 
-export default function Input({ label, icon, className = "", ...props }: InputProps) {
-  return (
-    <div className="w-full">
-      {label && (
-        <div className="text-[9px] tracking-[0.2em] text-muted uppercase mb-1.5">
-          {icon && <span className="mr-1">{icon}</span>}
-          {label}
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ label, error, icon, className = "", ...props }, ref) => {
+    return (
+      <div className="space-y-1.5">
+        {label && (
+          <label className="block text-sm font-medium text-text-muted">
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          {icon && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim">
+              {icon}
+            </div>
+          )}
+          <input
+            ref={ref}
+            className={`w-full bg-surface-light border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-text-dim focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all ${
+              icon ? "pl-10" : ""
+            } ${error ? "border-danger/50" : ""} ${className}`}
+            {...props}
+          />
         </div>
-      )}
-      <input
-        className={`w-full bg-white/[0.04] border border-white/[0.08] rounded-[10px] px-3.5 py-2.5 text-xs text-cream placeholder:text-muted/50 focus:outline-none focus:border-gold/40 transition-colors ${className}`}
-        {...props}
-      />
-    </div>
-  );
-}
+        {error && <p className="text-xs text-danger">{error}</p>}
+      </div>
+    );
+  }
+);
+
+Input.displayName = "Input";
+export default Input;

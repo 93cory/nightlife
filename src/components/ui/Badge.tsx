@@ -1,20 +1,31 @@
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: "gold" | "accent" | "success" | "muted";
-  className?: string;
+  variant?: "default" | "success" | "warning" | "danger" | "gold" | "info";
+  size?: "sm" | "md";
 }
 
-const variants = {
-  gold: "bg-gold text-night-black",
-  accent: "bg-accent text-white",
-  success: "bg-success text-night-black",
-  muted: "border border-white/10 text-muted",
+const variants: Record<string, string> = {
+  default: "bg-white/10 text-text-muted",
+  success: "bg-success/15 text-success",
+  warning: "bg-warning/15 text-warning",
+  danger: "bg-danger/15 text-danger",
+  gold: "bg-gold/15 text-gold",
+  info: "bg-info/15 text-info",
 };
 
-export default function Badge({ children, variant = "gold", className = "" }: BadgeProps) {
+const sizes: Record<string, string> = {
+  sm: "px-1.5 py-0.5 text-[10px]",
+  md: "px-2.5 py-1 text-xs",
+};
+
+export default function Badge({
+  children,
+  variant = "default",
+  size = "md",
+}: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[7px] font-bold tracking-[0.2em] uppercase ${variants[variant]} ${className}`}
+      className={`inline-flex items-center gap-1 font-medium rounded-full ${variants[variant]} ${sizes[size]}`}
     >
       {children}
     </span>

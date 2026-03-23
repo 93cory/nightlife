@@ -1,18 +1,33 @@
 interface CardProps {
   children: React.ReactNode;
-  variant?: "default" | "gold" | "accent";
   className?: string;
+  hover?: boolean;
+  padding?: "none" | "sm" | "md" | "lg";
 }
 
-const variants = {
-  default: "bg-dark-2 border-white/[0.04]",
-  gold: "bg-gradient-to-br from-gold/[0.12] to-gold/[0.03] border-gold/20",
-  accent: "bg-gradient-to-br from-accent/[0.08] to-accent/[0.02] border-accent/20",
+const paddings: Record<string, string> = {
+  none: "",
+  sm: "p-3",
+  md: "p-4",
+  lg: "p-6",
 };
 
-export default function Card({ children, variant = "default", className = "" }: CardProps) {
+export default function Card({
+  children,
+  className = "",
+  hover = false,
+  padding = "md",
+}: CardProps) {
   return (
-    <div className={`border rounded-[14px] p-3 ${variants[variant]} ${className}`}>
+    <div
+      className={`bg-white/[0.03] backdrop-blur-sm border border-white/[0.08] rounded-xl ${
+        paddings[padding]
+      } ${
+        hover
+          ? "hover:border-gold/20 hover:shadow-lg hover:shadow-gold/5 transition-all"
+          : ""
+      } ${className}`}
+    >
       {children}
     </div>
   );
