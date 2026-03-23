@@ -9,6 +9,7 @@ const publicPaths = [
   "/menu-public",
   "/reserver",
   "/tickets-public",
+  "/admin",
 ];
 
 function isPublic(pathname: string) {
