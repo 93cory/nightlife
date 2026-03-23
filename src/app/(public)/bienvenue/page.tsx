@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Phone, MessageCircle, MapPin, Clock, Star, ArrowRight, UtensilsCrossed, Navigation } from "lucide-react";
+import { Phone, MessageCircle, MapPin, Clock, Star, ArrowRight, Navigation, CalendarDays, Ticket } from "lucide-react";
 
 const data: Record<string, { name: string; type: string; emoji: string; desc: string; address: string; phone: string; hours: Record<string, string>; rating: number; reviews: number; gradient: string; menuHighlights: { emoji: string; name: string; price: number }[]; reviewsList: { name: string; rating: number; text: string }[] }> = {
   "le-privilege": {
@@ -129,6 +129,26 @@ function BienvenueContent() {
           <Link href={`/menu-public?e=${slug}`} className="flex items-center justify-center gap-1 mt-3 text-sm text-gold hover:underline">
             Voir le menu complet <ArrowRight size={14} />
           </Link>
+        </div>
+
+        {/* CTA buttons */}
+        <div className="space-y-3">
+          {(venue.type === "Restaurant" || venue.type === "Bar Lounge") && (
+            <Link
+              href={`/reserver?e=${slug}`}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-gold text-black font-semibold rounded-xl hover:opacity-90 transition-all"
+            >
+              <CalendarDays size={18} /> Réserver une table
+            </Link>
+          )}
+          {venue.type === "Boîte de nuit" && (
+            <Link
+              href={`/tickets-public?e=${slug}`}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:opacity-90 transition-all"
+            >
+              <Ticket size={18} /> Acheter des tickets
+            </Link>
+          )}
         </div>
 
         {/* Reviews */}
