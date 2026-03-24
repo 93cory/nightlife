@@ -4,6 +4,7 @@ import { Bell, Search, User, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
+import LanguageToggle from "@/components/shared/LanguageToggle";
 
 interface DashboardHeaderProps {
   userName?: string;
@@ -45,6 +46,9 @@ export default function DashboardHeader({
 
       {/* Right side */}
       <div className="flex items-center gap-3">
+        {/* Language */}
+        <LanguageToggle compact />
+
         {/* Notifications */}
         <button className="relative p-2 rounded-lg hover:bg-surface-light text-text-muted transition-colors">
           <Bell size={20} />
