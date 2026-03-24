@@ -2,12 +2,19 @@
   "name": "NightLife",
   "short_name": "NightLife",
   "description": "Gestion intelligente pour bars, restaurants et boîtes de nuit",
-  "start_url": "/",
+  "start_url": "/start",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#d4a843",
   "orientation": "portrait",
+  "categories": ["business", "food", "entertainment"],
   "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
@@ -17,6 +24,19 @@
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "icons": [{"src": "/icons/icon.svg", "sizes": "any"}]
+    },
+    {
+      "name": "Caisse POS",
+      "url": "/dashboard/caisse",
+      "icons": [{"src": "/icons/icon.svg", "sizes": "any"}]
     }
   ]
 }
