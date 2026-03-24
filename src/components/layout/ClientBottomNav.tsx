@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Search,
-  ShoppingBag,
+  Star,
   Ticket,
   User,
 } from "lucide-react";
@@ -13,7 +13,7 @@ import {
 const navItems = [
   { label: "Accueil", href: "/mon-compte", icon: Home },
   { label: "Explorer", href: "/explorer", icon: Search },
-  { label: "Commandes", href: "/mon-compte/commandes", icon: ShoppingBag },
+  { label: "Fidélité", href: "/mon-compte/fidelite", icon: Star },
   { label: "Tickets", href: "/mon-compte/tickets", icon: Ticket },
   { label: "Profil", href: "/mon-compte/profil", icon: User },
 ];

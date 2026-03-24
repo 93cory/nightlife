@@ -57,6 +57,7 @@ const navItems: NavItem[] = [
   { label: "Rapports", href: "/dashboard/rapports", icon: BarChart3 },
   { label: "Comptabilité", href: "/dashboard/comptabilite", icon: Wallet },
   { label: "Assistant IA", href: "/dashboard/chat", icon: Sparkles },
+  { label: "Contenu IA", href: "/dashboard/contenu-ia", icon: MessageSquare },
   { label: "Paramètres", href: "/dashboard/parametres", icon: Settings },
 ];
 
