@@ -25,6 +25,9 @@ import {
   X,
   Wine,
   Star,
+  Wallet,
+  Sparkles,
+  MessageSquare,
 } from "lucide-react";
 
 interface NavItem {
@@ -52,6 +55,8 @@ const navItems: NavItem[] = [
   { label: "Personnel", href: "/dashboard/personnel", icon: Users },
   { label: "Pointage", href: "/dashboard/pointage", icon: Clock },
   { label: "Rapports", href: "/dashboard/rapports", icon: BarChart3 },
+  { label: "Comptabilité", href: "/dashboard/comptabilite", icon: Wallet },
+  { label: "Assistant IA", href: "/dashboard/chat", icon: Sparkles },
   { label: "Paramètres", href: "/dashboard/parametres", icon: Settings },
 ];
 
