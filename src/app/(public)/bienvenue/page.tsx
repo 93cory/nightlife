@@ -134,12 +134,28 @@ function BienvenueContent() {
         {/* CTA buttons */}
         <div className="space-y-3">
           {(venue.type === "Restaurant" || venue.type === "Bar Lounge") && (
-            <Link
-              href={`/reserver?e=${slug}`}
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-gold text-black font-semibold rounded-xl hover:opacity-90 transition-all"
-            >
-              <CalendarDays size={18} /> Réserver une table
-            </Link>
+            <>
+              <Link
+                href={`/reserver?e=${slug}`}
+                className="flex items-center justify-center gap-2 w-full py-3.5 bg-gradient-gold text-black font-semibold rounded-xl hover:opacity-90 transition-all"
+              >
+                <CalendarDays size={18} /> Réserver une table
+              </Link>
+              <div className="grid grid-cols-2 gap-3">
+                <Link
+                  href={`/commander?e=${slug}&mode=collect`}
+                  className="flex items-center justify-center gap-2 py-3 border border-gold/30 text-gold font-semibold rounded-xl hover:bg-gold/5 transition-all text-sm"
+                >
+                  Click & Collect
+                </Link>
+                <Link
+                  href={`/commander?e=${slug}&mode=delivery`}
+                  className="flex items-center justify-center gap-2 py-3 border border-gold/30 text-gold font-semibold rounded-xl hover:bg-gold/5 transition-all text-sm"
+                >
+                  Livraison
+                </Link>
+              </div>
+            </>
           )}
           {venue.type === "Boîte de nuit" && (
             <Link

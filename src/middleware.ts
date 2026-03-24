@@ -9,6 +9,7 @@ const publicPaths = [
   "/menu-public",
   "/reserver",
   "/tickets-public",
+  "/commander",
   "/admin",
 ];
 
